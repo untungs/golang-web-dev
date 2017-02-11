@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"github.com/untungs/golang-web-dev/042_mongodb/06_hands-on/models"
+	"github.com/untungs/golang-web-dev/042_mongodb/08_hands-on/models"
 	"net/http"
 )
 

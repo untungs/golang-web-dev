@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/untungs/golang-web-dev/042_mongodb/06_hands-on/controllers"
-	"github.com/untungs/golang-web-dev/042_mongodb/06_hands-on/models"
+	"github.com/untungs/golang-web-dev/042_mongodb/08_hands-on/controllers"
+	"github.com/untungs/golang-web-dev/042_mongodb/08_hands-on/models"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
