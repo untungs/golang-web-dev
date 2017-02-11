@@ -24,23 +24,9 @@ func dbFile() *os.File {
 
 func NewUDB() Udb {
 	udb := Udb{}
-	dbf := dbFile()
-	defer dbf.Close()
 
-	fi, err := dbf.Stat()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	bs := make([]byte, fi.Size())
-
-	if _, err := dbf.Read(bs); err != nil {
-		log.Fatalln(err)
-	}
-	//fmt.Println(string(bs))
-
-	if err := json.Unmarshal(bs, &udb); err != nil {
-		log.Fatalln(err)
+	if err := json.NewDecoder(dbFile()).Decode(&udb); err != nil {
+		log.Println(err)
 	}
 	return udb
 }
@@ -50,17 +36,9 @@ func (db Udb) NewUser(u User) User {
 	u.Id = uuid.NewV4().String()
 	db[u.Id] = u
 
-	bs, err := json.Marshal(db)
-	if err != nil {
+	if err := json.NewEncoder(dbFile()).Encode(db); err != nil {
 		log.Fatalln(err)
 	}
-
-	dbf := dbFile()
-
-	if n, err := dbf.Write(bs); err != nil {
-		log.Fatalln(err, "- byte written:", n)
-	}
-	dbf.Close()
 
 	return u
 }
