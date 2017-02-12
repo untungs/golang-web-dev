@@ -24,8 +24,10 @@ func dbFile() *os.File {
 
 func NewUDB() Udb {
 	udb := Udb{}
+	f := dbFile()
+	defer f.Close()
 
-	if err := json.NewDecoder(dbFile()).Decode(&udb); err != nil {
+	if err := json.NewDecoder(f).Decode(&udb); err != nil {
 		log.Println(err)
 	}
 	return udb
@@ -36,8 +38,11 @@ func (db Udb) NewUser(u User) User {
 	u.Id = uuid.NewV4().String()
 	db[u.Id] = u
 
-	if err := json.NewEncoder(dbFile()).Encode(db); err != nil {
-		log.Fatalln(err)
+	f := dbFile()
+	defer f.Close()
+
+	if err := json.NewEncoder(f).Encode(db); err != nil {
+		log.Println(err)
 	}
 
 	return u
@@ -56,5 +61,13 @@ func (db Udb) DeleteUser(id string) error {
 		return err
 	}
 	delete(db, id)
+
+	f := dbFile()
+	defer f.Close()
+
+	f.Truncate(0)
+	if err := json.NewEncoder(f).Encode(db); err != nil {
+		log.Println(err)
+	}
 	return nil
 }
